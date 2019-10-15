@@ -1,0 +1,10 @@
+.register-container {
+  align-items: center;
+  display: flex;
+
+  form {
+    mat-form-field, button {
+      width: 100%;
+    }
+  }
+}

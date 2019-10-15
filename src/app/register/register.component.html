@@ -1,0 +1,67 @@
+<div class="register-container">
+  <div>
+    <h1>Register</h1>
+    <form [formGroup]="form" (ngSubmit)="onSubmit()">
+      <mat-form-field>
+        <input
+          matInput
+          type="text"
+          placeholder="Firstname"
+          formControlName="firstname">
+          <mat-error *ngIf="form.get('firstname').hasError('required')">
+            Firstname can't be empty
+          </mat-error>
+      </mat-form-field>
+      <mat-form-field>
+        <input
+          matInput
+          type="text"
+          placeholder="Lastname"
+          formControlName="lastname">
+          <mat-error *ngIf="form.get('lastname').hasError('required')">
+            Lastname can't be empty
+          </mat-error>
+      </mat-form-field>
+      <mat-form-field>
+        <input
+          matInput
+          type="email"
+          placeholder="Email"
+          formControlName="email">
+          <mat-error *ngIf="form.get('email').hasError('required')">
+            Email can't be empty
+          </mat-error>
+          <mat-error *ngIf="form.get('email').hasError('email')">
+            Email is not valid
+          </mat-error>
+      </mat-form-field>
+      <mat-form-field>
+        <input
+          matInput
+          type="password"
+          placeholder="Password"
+          formControlName="password">
+          <mat-error *ngIf="form.get('password').hasError('required')">
+            Password can't be empty
+          </mat-error>
+      </mat-form-field>
+      <mat-form-field>
+        <input
+          matInput
+          type="password"
+          placeholder="Confirm password"
+          formControlName="confirmPwd">
+          <mat-error *ngIf="form.get('confirmPwd').hasError('required')">
+            Please confirm your password
+          </mat-error>
+      </mat-form-field>
+      <button
+        mat-raised-button
+        color="primary"
+        type="submit"
+        [disabled]="!form.valid">
+        Register
+      </button>
+    </form>
+  </div>
+</div>

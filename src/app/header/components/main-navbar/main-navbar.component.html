@@ -1,0 +1,16 @@
+<mat-toolbar color="primary">
+  <mat-toolbar-row>
+    <span>Copyright Justice</span>
+    <span class="fill-remaining-space"></span>
+    <mat-menu #userMenu="matMenu">
+      <button mat-menu-item (click)="onLogout()">Logout</button>
+      <button mat-menu-item>Profile & Settings</button>
+    </mat-menu>
+    <button
+      mat-icon-button
+      [matMenuTriggerFor]="userMenu"
+      *ngIf="authenticated | async">
+      <img src="favicon.ico">
+    </button>
+  </mat-toolbar-row>
+</mat-toolbar>

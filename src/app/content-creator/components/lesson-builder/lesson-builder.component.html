@@ -1,0 +1,51 @@
+<div class="lesson-builder-container">
+  <form [formGroup]="form" (ngSubmit)="onSubmit()">
+    <!-- YouTube ID input -->
+    <mat-form-field>
+      <input matInput type="text" placeholder="YouTube video ID" formControlName="videoId">
+      <mat-error *ngIf="form.get('videoId').hasError('required')">
+        Please enter YouTube's video ID of the video you wish to configure
+      </mat-error>
+      <mat-error *ngIf="form.get('videoId').hasError('validId')">
+        Couldn't find a Youtube video with the entered ID
+      </mat-error>
+    </mat-form-field>
+
+    <!-- YouTube video preview-->
+    <iframe
+      *ngIf="videoUrl != null"
+      [src]="videoUrl"
+      frameborder="0"
+      allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
+      allowfullscreen>
+    </iframe>
+
+    <!-- Audio config forms -->
+    <div class="audio-configs-container" *ngIf="getAudioConfigArray().controls.length > 0">
+      <h2>Add your tracks</h2>
+      <app-audio-config-form
+        *ngFor="let config of getAudioConfigArray().controls; let i = index"
+        [form]="config">
+      </app-audio-config-form>
+
+      <!-- Add track button -->
+      <button
+        mat-raised-button
+        color="primary"
+        type="button"
+        (click)="pushAudioConfigForm()"
+        [disabled]="form.get('videoId').hasError('required') || form.get('videoId').hasError('validId')">
+        Add a track to this video
+      </button>
+    </div>
+
+    <!-- Submit button -->
+    <button
+      mat-raised-button
+      color="primary"
+      type="submit"
+      [disabled]="false">
+      Create lesson!
+    </button>
+  </form>
+</div>

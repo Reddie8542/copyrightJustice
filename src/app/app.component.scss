@@ -1,0 +1,12 @@
+@import 'variables';
+
+main {
+  padding: 5% 10% 0 10%;
+}
+
+.app-container {
+  display: grid;
+  background-color: $accent;
+  grid-template-rows: auto 1fr;
+  min-height: 100vh;
+}

@@ -1,0 +1,33 @@
+<div class="video-start-form" [formGroup]="form">
+  <h4>When to start playing this track in your video?</h4>
+  <mat-form-field class="custom-error-field">
+    <input
+      matInput
+      type="number"
+      placeholder="Hours"
+      formControlName="hours"
+      [errorStateMatcher]="matcher">
+  </mat-form-field>
+  <mat-form-field class="custom-error-field">
+    <input
+      matInput
+      type="number"
+      placeholder="Minutes"
+      formControlName="minutes"
+      [errorStateMatcher]="matcher">
+  </mat-form-field>
+  <mat-form-field class="custom-error-field">
+    <input
+      matInput
+      type="number"
+      placeholder="Seconds"
+      formControlName="seconds"
+      [errorStateMatcher]="matcher">
+  </mat-form-field>
+  <p class="custom-error-msg" *ngIf="form.hasError('requiredDuration') && form.touched">
+    Track's start time is required
+  </p>
+  <p class="custom-error-msg" *ngIf="form.hasError('validDuration') && form.touched">
+    Start time can't be beyond video's duration
+  </p>
+</div>

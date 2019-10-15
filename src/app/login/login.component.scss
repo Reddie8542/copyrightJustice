@@ -1,0 +1,29 @@
+.login-container {
+  align-items: center;
+  display: flex;
+  height: 100%;
+
+  div {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+
+    button {
+      margin: 5px 0;
+    }
+
+    form {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+
+      mat-form-field {
+        width: 100%;
+      }
+
+      button[type="submit"] {
+        width: 60%;
+      }
+    }
+  }
+}

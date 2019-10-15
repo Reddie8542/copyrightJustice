@@ -1,0 +1,45 @@
+/* You can add global styles to this file, and also import other style files */
+@import 'variables';
+
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; color: white; }
+
+.container {
+  padding: 0 5%;
+  width: 100%;
+}
+
+mat-form-field {
+  &.mat-form-field {
+    .mat-form-field {
+      &-underline {
+        position: relative;
+        bottom: auto !important;
+      }
+
+      &-subscript-wrapper {
+        position: static;
+      }
+    }
+  }
+
+  &.custom-error-field {
+    .mat-form-field-wrapper {
+      padding-bottom: 0;
+    }
+  }
+}
+
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.custom-error-msg {
+  color: $warn;
+  display: block;
+  font-size: 75%;
+  margin-top: 0;
+  width: 100%;
+}

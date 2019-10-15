@@ -1,0 +1,20 @@
+.lesson-builder-container {
+  padding: 5% 0;
+
+  form {
+    mat-form-field, button {
+      width: 100%;
+    }
+
+    iframe {
+      width: 100%;
+    }
+
+    .audio-configs-container {
+      h2 {
+        margin-bottom: 0;
+        width: 100%;
+      }
+    }
+  }
+}
