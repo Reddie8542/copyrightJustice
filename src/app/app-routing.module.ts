@@ -24,7 +24,7 @@ const routes: Routes = [
   },
   {
     path: 'content-creator',
-    canActivate: [ContentCreatorAuthGuard],
+    canActivate: [],
     children: [
       { path: 'lesson-builder', component: LessonBuilderComponent }
     ],

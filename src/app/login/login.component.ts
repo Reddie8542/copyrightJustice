@@ -28,12 +28,10 @@ export class LoginComponent implements OnInit {
   onContentCreatorSignIn() {
     const username: string = this.contentCreatorForm.value.username;
     const password: string = this.contentCreatorForm.value.password;
-    console.log(username, password);
+    const implicitSignInUrl = this.spotifyService.getImplicitSignInUrl();
     this.ccService.signIn(username, password);
-    this.spotifyService.signInAsContentCreator().subscribe(
-      response => console.log('spot sign in response', response)
-    );
-    this.router.navigate(['/content-creator', 'lesson-builder']);
+    location.href = implicitSignInUrl;
+    // this.router.navigate(['/content-creator', 'lesson-builder']);
   }
 
   onSpotifyClick() {
