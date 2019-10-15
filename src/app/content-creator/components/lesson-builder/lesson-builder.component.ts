@@ -47,8 +47,11 @@ export class LessonBuilderComponent implements OnInit, OnDestroy {
 
   pushAudioConfigForm() {
     (this.form.get('audioConfigs') as FormArray).push(this.fb.group({
-      trackStart: [null, Validators.required],
-      trackEnd: [null, Validators.required],
+      trackData: this.fb.group({
+        trackName: [null, Validators.required],
+        trackStart: [null, Validators.required],
+        trackEnd: [null, Validators.required],
+      }),
       videoStart: this.fb.group({
         hours: [null],
         minutes: [null],

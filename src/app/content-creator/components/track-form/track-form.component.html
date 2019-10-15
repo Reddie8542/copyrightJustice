@@ -1,0 +1,36 @@
+<div class="track-form" [formGroup]="form">
+  <h4>Select a track to play</h4>
+  <mat-form-field>
+    <input
+      matInput
+      type="text"
+      placeholder="Track name"
+      formControlName="trackName"
+    />
+  </mat-form-field>
+
+  <mat-autocomplete>
+    <mat-option [value]="'test'">Test</mat-option>
+  </mat-autocomplete>
+
+  <mat-form-field>
+    <input
+      matInput
+      type="number"
+      placeholder="Tracks's start time"
+      formControlName="trackStart">
+    <mat-error *ngIf="form.get('trackStart').hasError('required') && form.get('trackStart').touched">
+      Please enter the time you wish the track starts playing in your video
+    </mat-error>
+  </mat-form-field>
+  <mat-form-field>
+    <input
+      matInput
+      type="number"
+      placeholder="Track's start time"
+      formControlName="trackEnd">
+    <mat-error *ngIf="form.get('trackEnd').hasError('required') && form.get('trackEnd').touched">
+      Please enter the time you wish the track stops playing in your video
+    </mat-error>
+  </mat-form-field>
+</div>

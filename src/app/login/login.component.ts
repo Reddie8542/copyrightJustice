@@ -30,6 +30,9 @@ export class LoginComponent implements OnInit {
     const password: string = this.contentCreatorForm.value.password;
     console.log(username, password);
     this.ccService.signIn(username, password);
+    this.spotifyService.signInAsContentCreator().subscribe(
+      response => console.log('spot sign in response', response)
+    );
     this.router.navigate(['/content-creator', 'lesson-builder']);
   }
 

@@ -2,8 +2,16 @@
   padding: 5% 0;
 
   form {
-    mat-form-field, button {
+    mat-form-field {
       width: 100%;
+    }
+
+    button {
+      width: 100%;
+
+      &#add-track-btn {
+        margin: 15px 0;
+      }
     }
 
     iframe {

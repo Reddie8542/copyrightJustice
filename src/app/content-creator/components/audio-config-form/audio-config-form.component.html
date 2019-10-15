@@ -1,28 +1,6 @@
 <div class="audio-config-form" [formGroup]="form">
   <!-- Track's start and duration configuration form -->
-  <div class="track-start">
-    <h4>Which track to play?</h4>
-    <mat-form-field>
-      <input
-        matInput
-        type="number"
-        placeholder="Tracks's start time"
-        formControlName="trackStart">
-      <mat-error *ngIf="form.get('trackStart').hasError('required') && form.get('trackStart').touched">
-        Please enter the time you wish the track starts playing in your video
-      </mat-error>
-    </mat-form-field>
-    <mat-form-field>
-      <input
-        matInput
-        type="number"
-        placeholder="Track's start time"
-        formControlName="trackEnd">
-      <mat-error *ngIf="form.get('trackEnd').hasError('required') && form.get('trackEnd').touched">
-        Please enter the time you wish the track stops playing in your video
-      </mat-error>
-    </mat-form-field>
-  </div>
+  <app-track-form [form]="form.get('trackData')"></app-track-form>
 
   <!-- Video's start configuration form -->
   <app-video-start-form [form]="form.get('videoStart')"></app-video-start-form>
