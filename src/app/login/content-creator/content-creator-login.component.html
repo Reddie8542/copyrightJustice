@@ -1,0 +1,33 @@
+<div class="content-creator-login-container">
+  <div>
+    <button
+      mat-raised-button
+      color="primary"
+      type="button"
+      (click)="onSpotifySignIn()"
+      [disabled]="spotifyAccessToken != null">
+      Sign in with Spotify
+    </button>
+    <button
+      mat-raised-button
+      color="primary"
+      type="button"
+      (click)="onYoutubeSignIn()">
+      Sign in with YouTube
+    </button>
+    <button
+      mat-raised-button
+      color="accent"
+      type="button"
+      (click)="onContinueClick()">
+      Continue
+    </button>
+    <button
+      mat-button
+      color="accent"
+      type="button"
+      (click)="onViewerSignIn()">
+      I'm just here to watch a lesson
+    </button>
+  </div>
+</div>

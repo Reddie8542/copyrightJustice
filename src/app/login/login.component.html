@@ -1,70 +1,19 @@
 <div class="login-container">
   <div>
-    <div *ngIf="!showContentCreatorForm" class="streaming-buttons">
-      <button
-        mat-raised-button
-        color="primary"
-        type="button"
-        (click)="onSpotifyClick()">
-        Sign in with Spotify
-      </button>
-      <button
-        mat-button
-        color="accent"
-        type="button"
-        (click)="showContentCreatorForm = !showContentCreatorForm">
-        I'm a content creator
-      </button>
-    </div>
-    <form
-      *ngIf="showContentCreatorForm"
-      [formGroup]="contentCreatorForm"
-      (ngSubmit)="onContentCreatorSignIn()">
-      <mat-form-field>
-        <input
-          matInput
-          type="text"
-          placeholder="Username or email"
-          formControlName="username"
-        />
-        <mat-error *ngIf="contentCreatorForm.get('username').hasError('required')">
-          Username can't be empty
-        </mat-error>
-      </mat-form-field>
-
-      <mat-form-field>
-        <input
-          matInput
-          type="password"
-          placeholder="Password"
-          formControlName="password"
-        />
-        <mat-error *ngIf="contentCreatorForm.get('password').hasError('required')">
-          Password can't be empty
-        </mat-error>
-      </mat-form-field>
-
-      <button
-        mat-raised-button
-        color="primary"
-        type="submit"
-        [disabled]="!contentCreatorForm.valid">
-        Login
-      </button>
-      <button
-        mat-button
-        color="accent"
-        type="button"
-        [routerLink]="['/register']">
-        I want to register as a content creator
-      </button>
-      <button
-        mat-button
-        color="accent"
-        type="button"
-        (click)="showContentCreatorForm = !showContentCreatorForm">
-        I'm here to watch a lesson
-      </button>
-    </form>
+    <button
+      mat-raised-button
+      color="primary"
+      type="button"
+      (click)="onSpotifySignIn()"
+      [disabled]="spotifyAccessToken != null">
+      Sign in with Spotify
+    </button>
+    <button
+      mat-button
+      color="accent"
+      type="button"
+      (click)="onContentCreatorClick()">
+      I'm a content creator
+    </button>
   </div>
 </div>

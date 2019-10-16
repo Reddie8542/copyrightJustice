@@ -11,7 +11,9 @@ export class SpotifyService {
   private readonly CJ_CLIENT_ID = '34ada31f63b84648acbc8be0904bcb03';
   private _token: string;
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {
+    this.token = localStorage.getItem('spotifyToken');
+  }
 
   get token(): string {
     return this._token;
@@ -33,11 +35,11 @@ export class SpotifyService {
     return this.http.get(url, { params });
   }
 
-  getImplicitSignInUrl(): string {
+  getImplicitSignInUrl(redirectUri: string): string {
     const endpoint = 'authorize';
     const responseType = 'token';
-    const redirectUri = encodeURIComponent('http://localhost:4200/content-creator/lesson-builder');
-    const url = this.AUTH_BASE_URL + endpoint + `?response_type=${responseType}&client_id=${this.CJ_CLIENT_ID}&redirect_uri=${redirectUri}`;
+    const redirect = encodeURIComponent(redirectUri);
+    const url = this.AUTH_BASE_URL + endpoint + `?response_type=${responseType}&client_id=${this.CJ_CLIENT_ID}&redirect_uri=${redirect}`;
     return url;
   }
 

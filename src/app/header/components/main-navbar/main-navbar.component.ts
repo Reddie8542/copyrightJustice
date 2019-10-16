@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { ContentCreatorService } from 'src/app/shared/services/content-creator.service';
 import { Observable } from 'rxjs';
 import { Router } from '@angular/router';
 
@@ -11,15 +10,11 @@ import { Router } from '@angular/router';
 export class MainNavbarComponent implements OnInit {
   authenticated: Observable<boolean>;
 
-  constructor(private ccService: ContentCreatorService,
-              private router: Router) { }
+  constructor(private router: Router) { }
 
-  ngOnInit() {
-    this.authenticated = this.ccService.$authenticated;
-  }
+  ngOnInit() { }
 
   onLogout() {
-    this.ccService.signOut();
     this.router.navigateByUrl('/login');
   }
 }

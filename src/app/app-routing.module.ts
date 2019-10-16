@@ -3,16 +3,26 @@ import { Routes, RouterModule } from '@angular/router';
 import { LoginComponent } from './login/login.component';
 import { LessonComponent } from './lesson/lesson.component';
 import { RegisterComponent } from './register/register.component';
-import { ContentCreatorAuthGuard } from './shared/guards/content-creator-auth.guard';
 import { ContentCreatorComponent } from './content-creator/content-creator.component';
 import { LessonBuilderComponent } from './content-creator/components/lesson-builder/lesson-builder.component';
+import { SpotifyAuthGuard } from './shared/guards/spotify-auth.guard';
+import { ContentCreatorLoginComponent } from './login/content-creator/content-creator-login.component';
 
 
 const routes: Routes = [
-  { path: '', pathMatch: 'full', redirectTo: 'login' },
+  { path: '', pathMatch: 'full', redirectTo: '/login/viewer' },
   {
     path: 'login',
-    component: LoginComponent
+    children: [
+      {
+        path: 'viewer',
+        component: LoginComponent
+      },
+      {
+        path: 'content-creator',
+        component: ContentCreatorLoginComponent
+      }
+    ]
   },
   {
     path: 'lesson',
@@ -24,7 +34,7 @@ const routes: Routes = [
   },
   {
     path: 'content-creator',
-    canActivate: [],
+    canActivate: [SpotifyAuthGuard],
     children: [
       { path: 'lesson-builder', component: LessonBuilderComponent }
     ],
