@@ -2,6 +2,7 @@
   <div>
     <button
       mat-raised-button
+      class="w-100"
       color="primary"
       type="button"
       (click)="onSpotifySignIn()"
@@ -9,10 +10,19 @@
       Sign in with Spotify
     </button>
     <button
-      mat-button
+      mat-raised-button
       color="accent"
       type="button"
-      (click)="onContentCreatorClick()">
+      (click)="onContinueClick()"
+      [disabled]="spotifyAccessToken == null">
+      Continue
+    </button>
+    <button
+      mat-button
+      class="w-100"
+      color="accent"
+      type="button"
+      (click)="onContentCreatorSignIn()">
       I'm a content creator
     </button>
   </div>

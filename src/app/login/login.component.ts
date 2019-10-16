@@ -21,7 +21,7 @@ export class LoginComponent implements OnInit {
     }
   }
 
-  onYoutubeSignIn() {
+  onContinueClick() {
 
   }
 
@@ -31,7 +31,7 @@ export class LoginComponent implements OnInit {
     location.href = implicitSignInUrl;
   }
 
-  onContentCreatorClick() {
+  onContentCreatorSignIn() {
     this.router.navigate(['/login', 'content-creator']);
   }
 }

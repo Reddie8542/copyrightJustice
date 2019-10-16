@@ -9,8 +9,11 @@
     justify-content: center;
 
     button {
-      width: 100%;
       margin: 5px 0;
+
+      &.w-100 {
+        width: 100%;
+      }
     }
   }
 }
