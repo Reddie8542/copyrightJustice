@@ -10,6 +10,7 @@ export class SpotifyService {
   private readonly WEB_API_BASE_URL = 'https://api.spotify.com/v1/';
   private readonly CJ_CLIENT_ID = '34ada31f63b84648acbc8be0904bcb03';
   private readonly AUTH_COOKIE_DURATION = 3600;
+  // tslint:disable-next-line: variable-name
   private _token: string;
 
   constructor(private cookieService: CookieService,
@@ -53,7 +54,7 @@ export class SpotifyService {
     const endpoint = 'search';
     const url = this.WEB_API_BASE_URL + endpoint;
     const headers = new HttpHeaders({
-      'Authorization': `Bearer ${this.token}`
+      Authorization: `Bearer ${this.token}`
     });
     const params = {
       q: trackName,
