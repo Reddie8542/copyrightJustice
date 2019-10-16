@@ -19,6 +19,7 @@
       mat-raised-button
       color="accent"
       type="button"
+      [disabled]="spotifyAccessToken == null"
       (click)="onContinueClick()">
       Continue
     </button>

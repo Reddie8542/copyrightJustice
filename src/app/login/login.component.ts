@@ -17,7 +17,7 @@ export class LoginComponent implements OnInit {
   ngOnInit() {
     this.spotifyAccessToken = this.currentRoute.snapshot.fragment;
     if (this.spotifyAccessToken != null) {
-      this.spotifyService.token = this.spotifyAccessToken;
+
     }
   }
 

@@ -25,6 +25,7 @@ import { AudioConfigFormComponent } from './content-creator/components/audio-con
 import { TrackFormComponent } from './content-creator/components/track-form/track-form.component';
 import { SpotifyAuthInterceptor } from './shared/interceptors/spotify-auth-interceptor';
 import { ContentCreatorLoginComponent } from './login/content-creator/content-creator-login.component';
+import { CookieService } from 'ngx-cookie-service';
 
 @NgModule({
   declarations: [
@@ -56,6 +57,7 @@ import { ContentCreatorLoginComponent } from './login/content-creator/content-cr
     ReactiveFormsModule
   ],
   providers: [
+    CookieService
     // {
     //   provide: HTTP_INTERCEPTORS,
     //   useClass: SpotifyAuthInterceptor,

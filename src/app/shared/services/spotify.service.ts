@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
+import { CookieService } from 'ngx-cookie-service';
 
 @Injectable({
   providedIn: 'root'
@@ -9,17 +10,18 @@ export class SpotifyService {
   private readonly WEB_API_BASE_URL = 'https://api.spotify.com/v1/';
   private readonly SCOPES = 'streaming';
   private readonly CJ_CLIENT_ID = '34ada31f63b84648acbc8be0904bcb03';
+  private readonly AUTH_COOKIE_DURATION = 3600;
   private _token: string;
 
-  constructor(private http: HttpClient) {
-    this.token = localStorage.getItem('spotifyToken');
-  }
+  constructor(private cookieService: CookieService,
+              private http: HttpClient) { }
 
   get token(): string {
     return this._token;
   }
 
   set token(token: string) {
+    this.cookieService.set('spotifyToken', token, this.AUTH_COOKIE_DURATION);
     this._token = token;
   }
 
