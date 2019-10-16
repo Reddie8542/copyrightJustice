@@ -6,11 +6,16 @@
       type="text"
       placeholder="Track name"
       formControlName="trackName"
+      [matAutocomplete]="trackAutocomplete"
     />
   </mat-form-field>
 
-  <mat-autocomplete>
-    <mat-option [value]="'test'">Test</mat-option>
+  <mat-autocomplete #trackAutocomplete="matAutocomplete">
+    <mat-option
+      *ngFor="let track of tracks | async"
+      [value]="track.id">
+      {{ track.artists[0].name + ' - ' + track.name }}
+    </mat-option>
   </mat-autocomplete>
 
   <mat-form-field>

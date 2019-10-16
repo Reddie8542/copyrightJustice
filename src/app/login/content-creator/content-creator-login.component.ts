@@ -20,14 +20,14 @@ export class ContentCreatorLoginComponent implements OnInit {
     const fragment = this.currentRoute.snapshot.fragment;
     if (fragment == null) {
       const isSpotifyAuthenticated = this.spotifyServ.isAuthenticated();
-      this.spotifyAccessToken = isSpotifyAuthenticated ? this.spotifyServ.token : null;
+      this.spotifyAccessToken = isSpotifyAuthenticated ? this.spotifyServ.authToken : null;
     } else {
       const [accessTokenString, , expiresInString] =  fragment.split('&');
       const spotifyCookie = {
         accessToken: accessTokenString.replace('access_token=', ''),
         expiresIn: expiresInString.replace('expires_in=', '')
       };
-      this.spotifyServ.token = spotifyCookie.accessToken;
+      this.spotifyServ.authToken = spotifyCookie.accessToken;
       this.spotifyAccessToken = spotifyCookie.accessToken;
     }
   }

@@ -71,7 +71,7 @@ export class LessonBuilderComponent implements OnInit, OnDestroy {
   }
 
   onSubmit() {
-    console.log(this.form);
+    console.log(this.form.value);
   }
 
   requiredDuration(group: FormGroup): ValidationErrors {
@@ -96,11 +96,11 @@ export class LessonBuilderComponent implements OnInit, OnDestroy {
   }
 
   validYoutubeId(control: AbstractControl): ValidationErrors {
-    return timer(1000).pipe(switchMap(
+    return timer(1000).pipe(
+      switchMap(
       () => {
         return this.youtubeServ.getVideoDetails(control.value).pipe(
           map((response: any) => {
-            console.log('response:', response);
             if (response.items.length > 0) {
               const isoDuration: string = response.items[0].contentDetails.duration;
               this.videoLength = moment.duration(isoDuration).asMilliseconds();

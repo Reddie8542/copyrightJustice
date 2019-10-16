@@ -18,7 +18,7 @@ export class LoginComponent implements OnInit {
     const fragment = this.currentRoute.snapshot.fragment;
     if (fragment == null) {
       const isSpotifyAuthenticated = this.spotifyServ.isAuthenticated();
-      this.spotifyAccessToken = isSpotifyAuthenticated ? this.spotifyServ.token : null;
+      this.spotifyAccessToken = isSpotifyAuthenticated ? this.spotifyServ.authToken : null;
     }
   }
 

@@ -1,29 +1,26 @@
-import { Component, Input, OnInit, OnDestroy } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { FormGroup } from '@angular/forms';
-import { Subscription } from 'rxjs';
+import { Observable } from 'rxjs';
 import { SpotifyService } from 'src/app/shared/services/spotify.service';
-import { debounceTime, switchMap } from 'rxjs/operators';
+import { debounceTime, switchMap, filter } from 'rxjs/operators';
+import { Track } from 'src/app/shared/models/track.model';
 
 @Component({
   selector: 'app-track-form',
   templateUrl: 'track-form.component.html',
   styleUrls: ['track-form.component.scss']
 })
-export class TrackFormComponent implements OnInit, OnDestroy {
+export class TrackFormComponent implements OnInit {
   @Input() form: FormGroup;
-  tracks: Array<any>;
-  trackNameSub: Subscription;
+  tracks: Observable<Track[]>;
 
   constructor(private spotifyServ: SpotifyService) { }
 
   ngOnInit() {
-    this.trackNameSub = this.form.get('trackName').valueChanges.pipe(
+    this.tracks = this.form.get('trackName').valueChanges.pipe(
       debounceTime(1000),
-      switchMap((trackName: string) => this.spotifyServ.searchTrack(trackName))
-    ).subscribe(response => console.log('Tracks: ', response));
-  }
-
-  ngOnDestroy() {
-    this.trackNameSub.unsubscribe();
+      filter((trackName: string) => trackName != null && trackName !== ''),
+      switchMap((trackName: string) => this.spotifyServ.searchTracks(trackName))
+    );
   }
 }
