@@ -43,7 +43,7 @@ export class ContentCreatorLoginComponent implements OnInit {
   }
 
   onContinueClick(): void {
-
+    this.router.navigate(['/content-creator', 'lesson-builder']);
   }
 
   onViewerSignIn(): void {

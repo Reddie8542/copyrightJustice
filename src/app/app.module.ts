@@ -56,14 +56,7 @@ import { CookieService } from 'ngx-cookie-service';
     MatToolbarModule,
     ReactiveFormsModule
   ],
-  providers: [
-    CookieService
-    // {
-    //   provide: HTTP_INTERCEPTORS,
-    //   useClass: SpotifyAuthInterceptor,
-    //   multi: true
-    // }
-  ],
+  providers: [CookieService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

@@ -8,7 +8,6 @@ import { CookieService } from 'ngx-cookie-service';
 export class SpotifyService {
   private readonly AUTH_BASE_URL = 'https://accounts.spotify.com/';
   private readonly WEB_API_BASE_URL = 'https://api.spotify.com/v1/';
-  private readonly SCOPES = 'streaming';
   private readonly CJ_CLIENT_ID = '34ada31f63b84648acbc8be0904bcb03';
   private readonly AUTH_COOKIE_DURATION = 3600;
   private _token: string;
@@ -17,7 +16,16 @@ export class SpotifyService {
               private http: HttpClient) { }
 
   get token(): string {
-    return this._token;
+    const serviceToken = this._token;
+    if (this.isTokenValid(serviceToken)) {
+      return serviceToken;
+    }
+    const cookieToken = this.cookieService.get('spotifyToken');
+    if (this.isTokenValid(cookieToken)) {
+      this.token = cookieToken;
+      return cookieToken;
+    }
+    return null;
   }
 
   set token(token: string) {
@@ -26,18 +34,7 @@ export class SpotifyService {
   }
 
   isAuthenticated(): boolean {
-    let token = this.token;
-    if (!this.isTokenValid(token)) {
-      token = this.cookieService.get('spotifyToken');
-      if (!this.isTokenValid(token)) {
-        return false;
-      } else {
-        this.token = token;
-        return true;
-      }
-    } else {
-      return true;
-    }
+    return this.token != null;
   }
 
   private isTokenValid(token: string): boolean {

@@ -10,5 +10,9 @@
 
   mat-form-field {
     width: 45%;
+
+    &#track-search {
+      width: 100%;
+    }
   }
 }
