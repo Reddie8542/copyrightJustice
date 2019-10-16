@@ -25,16 +25,23 @@ export class SpotifyService {
     this._token = token;
   }
 
-  signIn() {
-    const endpoint = 'authorize';
-    const url = this.AUTH_BASE_URL + endpoint;
-    const params = {
-      client_id: this.CJ_CLIENT_ID,
-      response_type: 'token',
-      redirect_uri: 'localhost:4200/lesson',
-      scope: this.SCOPES
-    };
-    return this.http.get(url, { params });
+  isAuthenticated(): boolean {
+    let token = this.token;
+    if (!this.isTokenValid(token)) {
+      token = this.cookieService.get('spotifyToken');
+      if (!this.isTokenValid(token)) {
+        return false;
+      } else {
+        this.token = token;
+        return true;
+      }
+    } else {
+      return true;
+    }
+  }
+
+  private isTokenValid(token: string): boolean {
+    return token != null && token !== '';
   }
 
   getImplicitSignInUrl(redirectUri: string): string {

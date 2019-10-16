@@ -12,12 +12,13 @@ export class LoginComponent implements OnInit {
 
   constructor(private currentRoute: ActivatedRoute,
               private router: Router,
-              private spotifyService: SpotifyService) { }
+              private spotifyServ: SpotifyService) { }
 
   ngOnInit() {
-    this.spotifyAccessToken = this.currentRoute.snapshot.fragment;
-    if (this.spotifyAccessToken != null) {
-
+    const fragment = this.currentRoute.snapshot.fragment;
+    if (fragment == null) {
+      const isSpotifyAuthenticated = this.spotifyServ.isAuthenticated();
+      this.spotifyAccessToken = isSpotifyAuthenticated ? this.spotifyServ.token : null;
     }
   }
 
@@ -26,8 +27,8 @@ export class LoginComponent implements OnInit {
   }
 
   onSpotifySignIn() {
-    const redirectUri = 'http://localhost:4200/login';
-    const implicitSignInUrl = this.spotifyService.getImplicitSignInUrl(redirectUri);
+    const redirectUri = 'http://localhost:4200/login/viewer';
+    const implicitSignInUrl = this.spotifyServ.getImplicitSignInUrl(redirectUri);
     location.href = implicitSignInUrl;
   }
 

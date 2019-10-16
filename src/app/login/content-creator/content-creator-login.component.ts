@@ -19,18 +19,8 @@ export class ContentCreatorLoginComponent implements OnInit {
   ngOnInit() {
     const fragment = this.currentRoute.snapshot.fragment;
     if (fragment == null) {
-      let token = this.spotifyServ.token;
-      if (!this.isTokenValid(token)) {
-        token = this.cookieService.get('spotifyToken');
-        if (!this.isTokenValid(token)) {
-          this.spotifyAccessToken = null;
-        } else {
-          this.spotifyServ.token = token;
-          this.spotifyAccessToken = token;
-        }
-      } else {
-        this.spotifyAccessToken = token;
-      }
+      const isSpotifyAuthenticated = this.spotifyServ.isAuthenticated();
+      this.spotifyAccessToken = isSpotifyAuthenticated ? this.spotifyServ.token : null;
     } else {
       const [accessTokenString, , expiresInString] =  fragment.split('&');
       const spotifyCookie = {
@@ -40,10 +30,6 @@ export class ContentCreatorLoginComponent implements OnInit {
       this.spotifyServ.token = spotifyCookie.accessToken;
       this.spotifyAccessToken = spotifyCookie.accessToken;
     }
-  }
-
-  private isTokenValid(token: string): boolean {
-    return token != null && token !== '';
   }
 
   onSpotifySignIn(): void {
