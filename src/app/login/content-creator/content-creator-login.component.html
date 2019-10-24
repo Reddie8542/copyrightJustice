@@ -6,7 +6,7 @@
       color="primary"
       type="button"
       (click)="onSpotifySignIn()"
-      [disabled]="spotifyAccessToken != null">
+      [disabled]="isSpotifyAuthenticated">
       Sign in with Spotify
     </button>
     <button
@@ -21,7 +21,7 @@
       mat-raised-button
       color="accent"
       type="button"
-      [disabled]="spotifyAccessToken == null"
+      [disabled]="!isSpotifyAuthenticated"
       (click)="onContinueClick()">
       Continue
     </button>
@@ -30,7 +30,7 @@
       class="w-100"
       color="accent"
       type="button"
-      (click)="onViewerSignIn()">
+      [routerLink]="['/login', 'viewer']">
       I'm just here to watch a lesson
     </button>
   </div>

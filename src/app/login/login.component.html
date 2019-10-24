@@ -6,7 +6,7 @@
       color="primary"
       type="button"
       (click)="onSpotifySignIn()"
-      [disabled]="spotifyAccessToken != null">
+      [disabled]="isSpotifyAuthenticated">
       Sign in with Spotify
     </button>
     <button
@@ -14,7 +14,7 @@
       color="accent"
       type="button"
       (click)="onContinueClick()"
-      [disabled]="spotifyAccessToken == null">
+      [disabled]="!isSpotifyAuthenticated">
       Continue
     </button>
     <button
@@ -22,7 +22,7 @@
       class="w-100"
       color="accent"
       type="button"
-      (click)="onContentCreatorSignIn()">
+      [routerLink]="['/login', 'content-creator']">
       I'm a content creator
     </button>
   </div>

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Router, ActivatedRoute } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { SpotifyService } from '../shared/services/spotify.service';
 
 @Component({
@@ -8,17 +8,19 @@ import { SpotifyService } from '../shared/services/spotify.service';
   styleUrls: ['login.component.scss']
 })
 export class LoginComponent implements OnInit {
-  spotifyAccessToken: string;
+  isSpotifyAuthenticated: boolean;
 
   constructor(private currentRoute: ActivatedRoute,
-              private router: Router,
               private spotifyServ: SpotifyService) { }
 
   ngOnInit() {
-    const fragment = this.currentRoute.snapshot.fragment;
-    if (fragment == null) {
-      const isSpotifyAuthenticated = this.spotifyServ.isAuthenticated();
-      this.spotifyAccessToken = isSpotifyAuthenticated ? this.spotifyServ.authToken : null;
+    this.isSpotifyAuthenticated = this.spotifyServ.isAuthenticated();
+    if (!this.isSpotifyAuthenticated) {
+      const fragment = this.currentRoute.snapshot.fragment;
+      if (fragment != null) {
+        this.spotifyServ.setAuthToken(fragment);
+        this.isSpotifyAuthenticated = this.spotifyServ.isAuthenticated();
+      }
     }
   }
 
@@ -30,9 +32,5 @@ export class LoginComponent implements OnInit {
     const redirectUri = 'http://localhost:4200/login/viewer';
     const implicitSignInUrl = this.spotifyServ.getImplicitSignInUrl(redirectUri);
     location.href = implicitSignInUrl;
-  }
-
-  onContentCreatorSignIn() {
-    this.router.navigate(['/login', 'content-creator']);
   }
 }

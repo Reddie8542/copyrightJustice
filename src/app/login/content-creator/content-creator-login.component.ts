@@ -9,7 +9,7 @@ import { CookieService } from 'ngx-cookie-service';
   styleUrls: ['content-creator-login.component.scss']
 })
 export class ContentCreatorLoginComponent implements OnInit {
-  spotifyAccessToken: string;
+  isSpotifyAuthenticated: boolean;
 
   constructor(private cookieService: CookieService,
               private currentRoute: ActivatedRoute,
@@ -17,18 +17,13 @@ export class ContentCreatorLoginComponent implements OnInit {
               private spotifyServ: SpotifyService) { }
 
   ngOnInit() {
-    const fragment = this.currentRoute.snapshot.fragment;
-    if (fragment == null) {
-      const isSpotifyAuthenticated = this.spotifyServ.isAuthenticated();
-      this.spotifyAccessToken = isSpotifyAuthenticated ? this.spotifyServ.authToken : null;
-    } else {
-      const [accessTokenString, , expiresInString] =  fragment.split('&');
-      const spotifyCookie = {
-        accessToken: accessTokenString.replace('access_token=', ''),
-        expiresIn: expiresInString.replace('expires_in=', '')
-      };
-      this.spotifyServ.authToken = spotifyCookie.accessToken;
-      this.spotifyAccessToken = spotifyCookie.accessToken;
+    this.isSpotifyAuthenticated = this.spotifyServ.isAuthenticated();
+    if (!this.isSpotifyAuthenticated) {
+      const fragment = this.currentRoute.snapshot.fragment;
+      if (fragment != null) {
+        this.spotifyServ.setAuthToken(fragment);
+        this.isSpotifyAuthenticated = this.spotifyServ.isAuthenticated();
+      }
     }
   }
 
@@ -44,9 +39,5 @@ export class ContentCreatorLoginComponent implements OnInit {
 
   onContinueClick(): void {
     this.router.navigate(['/content-creator', 'lesson-builder']);
-  }
-
-  onViewerSignIn(): void {
-    this.router.navigate(['/login', 'viewer']);
   }
 }

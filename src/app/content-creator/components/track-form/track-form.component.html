@@ -10,32 +10,74 @@
     />
   </mat-form-field>
 
-  <mat-autocomplete #trackAutocomplete="matAutocomplete">
+  <mat-autocomplete
+    #trackAutocomplete="matAutocomplete"
+    (optionSelected)="onSelectTrack($event)">
     <mat-option
-      *ngFor="let track of tracks | async"
+      *ngFor="let track of tracks"
       [value]="track.id">
       {{ track.artists[0].name + ' - ' + track.name }}
     </mat-option>
   </mat-autocomplete>
 
-  <mat-form-field>
-    <input
-      matInput
-      type="number"
-      placeholder="Tracks's start time"
-      formControlName="trackStart">
-    <mat-error *ngIf="form.get('trackStart').hasError('required') && form.get('trackStart').touched">
-      Please enter the time you wish the track starts playing in your video
-    </mat-error>
-  </mat-form-field>
-  <mat-form-field>
-    <input
-      matInput
-      type="number"
-      placeholder="Track's start time"
-      formControlName="trackEnd">
-    <mat-error *ngIf="form.get('trackEnd').hasError('required') && form.get('trackEnd').touched">
-      Please enter the time you wish the track stops playing in your video
-    </mat-error>
-  </mat-form-field>
+  <!--Track Start -->
+  <div class="track-start" [formGroup]="form.get('trackStart')">
+    <h4>Track starting point</h4>
+    <mat-form-field class="custom-error-field">
+      <input
+        matInput
+        type="number"
+        placeholder="Hour"
+        formControlName="hours"
+        [errorStateMatcher]="matcher">
+    </mat-form-field>
+    <mat-form-field class="custom-error-field">
+      <input
+        matInput
+        type="number"
+        placeholder="Minute"
+        formControlName="minutes"
+        [errorStateMatcher]="matcher">
+    </mat-form-field>
+    <mat-form-field class="custom-error-field">
+      <input
+        matInput
+        type="number"
+        placeholder="Second"
+        formControlName="seconds"
+        [errorStateMatcher]="matcher">
+    </mat-form-field>
+    <p class="custom-error-msg" *ngIf="form.get('trackStart').hasError('validStart')">
+      {{ form.get('trackStart').getError('validStart').message }}
+    </p>
+  </div>
+
+  <!--Track End -->
+  <div class="track-end" [formGroup]="form.get('trackEnd')">
+    <h4>Track ending point</h4>
+    <mat-form-field class="custom-error-field">
+      <input
+        matInput
+        type="number"
+        placeholder="Hour"
+        formControlName="hours"
+        [errorStateMatcher]="matcher">
+    </mat-form-field>
+    <mat-form-field class="custom-error-field">
+      <input
+        matInput
+        type="number"
+        placeholder="Minute"
+        formControlName="minutes"
+        [errorStateMatcher]="matcher">
+    </mat-form-field>
+    <mat-form-field class="custom-error-field">
+      <input
+        matInput
+        type="number"
+        placeholder="Second"
+        formControlName="seconds"
+        [errorStateMatcher]="matcher">
+    </mat-form-field>
+  </div>
 </div>

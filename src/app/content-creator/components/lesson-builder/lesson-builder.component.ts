@@ -13,7 +13,6 @@ import * as moment from 'moment';
   styleUrls: ['lesson-builder.component.scss']
 })
 export class LessonBuilderComponent implements OnInit, OnDestroy {
-  @ViewChild(VideoStartFormComponent, { static: false }) videoConfigForm: VideoStartFormComponent;
   form: FormGroup;
   videoUrl: SafeResourceUrl;
   videoIdSub: Subscription;
@@ -24,21 +23,22 @@ export class LessonBuilderComponent implements OnInit, OnDestroy {
               private youtubeServ: YoutubeService) { }
 
   ngOnInit() {
-    this.videoLength = 20000;
     this.form = this.fb.group({
       videoId: [null, Validators.required, this.validYoutubeId.bind(this)],
       audioConfigs: this.fb.array([], Validators.required)
     });
-    this.videoIdSub = this.form.get('videoId').valueChanges.subscribe((videoId: string) => {
-      this.emptyAudioConfigArray();
-      this.getAudioConfigArray().reset();
-      if (videoId.length > 0) {
-        const url = `https://www.youtube.com/embed/${videoId}`;
-        this.videoUrl = this.sanitizer.bypassSecurityTrustResourceUrl(url);
-      } else {
-        this.videoUrl = null;
+    this.videoIdSub = this.form.get('videoId').valueChanges.subscribe(
+      (videoId: string) => {
+        this.emptyAudioConfigArray();
+        this.getAudioConfigArray().reset();
+        if (videoId.length > 0) {
+          const url = `https://www.youtube.com/embed/${videoId}`;
+          this.videoUrl = this.sanitizer.bypassSecurityTrustResourceUrl(url);
+        } else {
+          this.videoUrl = null;
+        }
       }
-    });
+    );
   }
 
   ngOnDestroy() {
@@ -49,8 +49,16 @@ export class LessonBuilderComponent implements OnInit, OnDestroy {
     (this.form.get('audioConfigs') as FormArray).push(this.fb.group({
       trackData: this.fb.group({
         trackName: [null, Validators.required],
-        trackStart: [null, Validators.required],
-        trackEnd: [null, Validators.required],
+        trackStart: this.fb.group({
+          hours: [null],
+          minutes: [null],
+          seconds: [null]
+        }),
+        trackEnd: this.fb.group({
+          hours: [null],
+          minutes: [null],
+          seconds: [null]
+        })
       }),
       videoStart: this.fb.group({
         hours: [null],
@@ -71,7 +79,7 @@ export class LessonBuilderComponent implements OnInit, OnDestroy {
   }
 
   onSubmit() {
-    console.log(this.form.value);
+    console.log(this.form);
   }
 
   requiredDuration(group: FormGroup): ValidationErrors {
