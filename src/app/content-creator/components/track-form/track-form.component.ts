@@ -5,7 +5,8 @@ import { SpotifyService } from 'src/app/shared/services/spotify.service';
 import { debounceTime, switchMap, filter } from 'rxjs/operators';
 import { Track } from 'src/app/shared/models/track.model';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
-import { TrackFormErrorMatcher } from './track-form.error-matcher';
+import { TrackFormEndErrorMatcher } from './track-form-end.error-matcher';
+import { TrackFormStartErrorMatcher } from './track-form-start.error-matcher';
 
 @Component({
   selector: 'app-track-form',
@@ -17,12 +18,14 @@ export class TrackFormComponent implements OnInit, OnDestroy {
   tracks: Track[];
   trackName: Subscription;
   selectedTrackDuration: number;
-  matcher: TrackFormErrorMatcher;
+  endMatcher: TrackFormEndErrorMatcher;
+  startMatcher: TrackFormStartErrorMatcher;
 
   constructor(private spotifyServ: SpotifyService) { }
 
   ngOnInit() {
-    this.matcher = new TrackFormErrorMatcher();
+    this.endMatcher = new TrackFormEndErrorMatcher();
+    this.startMatcher = new TrackFormStartErrorMatcher();
     this.trackName = this.form.get('trackName').valueChanges.pipe(
       debounceTime(1000),
       filter((trackName: string) => trackName != null && trackName !== ''),
@@ -62,9 +65,9 @@ export class TrackFormComponent implements OnInit, OnDestroy {
       validStart: { message: '' }
     };
     if (trackStart <= 0) {
-      error.validStart.message = 'Start time can\' be less than zero';
+      error.validStart.message = 'Start time can\' be zero or less than zero';
     } else if (trackStart > this.selectedTrackDuration) {
-      error.validStart.message = 'Track can\' start after the track has ended';
+      error.validStart.message = 'Track can\' start after it has already ended';
     } else {
       return null;
     }
