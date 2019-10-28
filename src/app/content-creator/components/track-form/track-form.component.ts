@@ -65,7 +65,7 @@ export class TrackFormComponent implements OnInit, OnDestroy {
       validStart: { message: '' }
     };
     if (trackStart <= 0) {
-      error.validStart.message = 'Start time can\' be zero or less than zero';
+      error.validStart.message = 'Start time can\' be zero or less';
     } else if (trackStart > this.selectedTrackDuration) {
       error.validStart.message = 'Track can\' start after it has already ended';
     } else {
@@ -77,13 +77,18 @@ export class TrackFormComponent implements OnInit, OnDestroy {
   private validEnd(group: FormGroup): ValidationErrors {
     const trackStart = this.getTrackCheckpoint('trackStart');
     const trackEnd = this.getTrackCheckpoint('trackEnd');
-    console.log('trackStart in milliseconds', trackStart);
-    console.log('trackEnd in milliseconds', trackEnd);
-    console.log('Selected track duration', this.selectedTrackDuration);
-    if (trackEnd <= 0 || trackEnd > this.selectedTrackDuration || trackEnd < trackStart) {
-      return { validEnd: true, message: '' };
+    const error = {
+      validEnd: { message: '' }
+    };
+    if (trackEnd <= 0) {
+      error.validEnd.message = 'End time can\' be zero or less';
+    } else if (trackEnd > this.selectedTrackDuration) {
+      error.validEnd.message = 'Track fragment can\'t end after track has ended';
+    } else if (trackEnd < trackStart) {
+      error.validEnd.message = 'Track fragment can\'t end before track\'s Start time';
     } else {
       return null;
     }
+    return error;
   }
 }

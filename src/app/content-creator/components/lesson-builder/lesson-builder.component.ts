@@ -3,9 +3,11 @@ import { FormGroup, FormBuilder, Validators, ValidationErrors, AbstractControl, 
 import { SafeResourceUrl, DomSanitizer } from '@angular/platform-browser';
 import { Subscription, timer } from 'rxjs';
 import { YoutubeService } from 'src/app/shared/services/youtube.service';
-import { map, switchMap } from 'rxjs/operators';
+import { map, switchMap, filter } from 'rxjs/operators';
 import { VideoStartFormComponent } from '../video-start-form/video-start-form.component';
 import * as moment from 'moment';
+import { Lesson } from 'src/app/shared/models/lesson.model';
+import { ContentCreatorService } from 'src/app/shared/services/content-creator.service';
 
 @Component({
   selector: 'app-lesson-builder',
@@ -19,6 +21,7 @@ export class LessonBuilderComponent implements OnInit, OnDestroy {
   videoLength: number;
 
   constructor(private fb: FormBuilder,
+              private ccService: ContentCreatorService,
               private sanitizer: DomSanitizer,
               private youtubeServ: YoutubeService) { }
 
@@ -27,16 +30,14 @@ export class LessonBuilderComponent implements OnInit, OnDestroy {
       videoId: [null, Validators.required, this.validYoutubeId.bind(this)],
       audioConfigs: this.fb.array([], Validators.required)
     });
-    this.videoIdSub = this.form.get('videoId').valueChanges.subscribe(
+    this.videoIdSub = this.form.get('videoId').valueChanges.pipe(
+      filter((videoId: string) => videoId.length > 0)
+    ).subscribe(
       (videoId: string) => {
         this.emptyAudioConfigArray();
         this.getAudioConfigArray().reset();
-        if (videoId.length > 0) {
-          const url = `https://www.youtube.com/embed/${videoId}`;
-          this.videoUrl = this.sanitizer.bypassSecurityTrustResourceUrl(url);
-        } else {
-          this.videoUrl = null;
-        }
+        const url = `https://www.youtube.com/embed/${videoId}`;
+        this.videoUrl = this.sanitizer.bypassSecurityTrustResourceUrl(url);
       }
     );
   }
@@ -79,7 +80,12 @@ export class LessonBuilderComponent implements OnInit, OnDestroy {
   }
 
   onSubmit() {
-    console.log(this.form);
+    console.log(this.getAudioConfigArray().value);
+    const lesson: Lesson = {
+      videoId: this.form.value.videoId,
+      audioConfigs: this.getAudioConfigArray().value
+    };
+    this.ccService.createLesson(lesson);
   }
 
   requiredDuration(group: FormGroup): ValidationErrors {

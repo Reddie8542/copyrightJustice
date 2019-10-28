@@ -79,5 +79,8 @@
         formControlName="seconds"
         [errorStateMatcher]="endMatcher">
     </mat-form-field>
+    <p class="custom-error-msg" *ngIf="form.get('trackEnd').hasError('validEnd') && form.get('trackEnd').touched">
+      {{ form.get('trackEnd').getError('validEnd').message }}
+    </p>
   </div>
 </div>
