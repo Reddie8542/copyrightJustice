@@ -87,9 +87,11 @@ export class SpotifyService {
     const endpoint = 'authorize';
     const responseType = 'token';
     const redirect = encodeURIComponent(redirectUri);
+    const scopes = 'streaming user-read-email user-read-private';
     return SpotifyService.AUTH_BASE_URL
             + endpoint
             + `?response_type=${responseType}`
+            + `&scope=${scopes}`
             + `&client_id=${SpotifyService.CJ_CLIENT_ID}`
             + `&redirect_uri=${redirect}`;
   }
