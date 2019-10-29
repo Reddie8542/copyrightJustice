@@ -4,6 +4,7 @@ import { Lesson } from '../shared/models/lesson.model';
 import { ActivatedRoute } from '@angular/router';
 import { interval, Subscription } from 'rxjs';
 import { switchMap, map } from 'rxjs/operators';
+import { LessonTimestamp } from '../shared/models/audio-config.model';
 
 @Component({
   selector: 'app-lesson',
@@ -15,7 +16,6 @@ export class LessonComponent implements OnInit, AfterViewInit, OnDestroy {
   player: any;
   lesson: Lesson;
   playerSecondSub: Subscription;
-  secsSinceStarted: number;
 
   constructor(private ccService: ContentCreatorService,
               private currentRoute: ActivatedRoute) { }
@@ -57,20 +57,22 @@ export class LessonComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   onPlayerReady() {
-    console.log('player is ready!');
+    console.log('YouTube player is ready!');
   }
 
   onPlayerStateChange(event) {
-    console.log('onStateChange was executed! Current state: ', event.data);
     switch (event.data) {
       case this.YT.PlayerState.PLAYING:
         // Start querying video status each second
-        const playerSecondChanges$ = interval(1000);
+        const playerSecondChanges$ = interval(200);
         this.playerSecondSub = playerSecondChanges$.pipe(
           map(value => this.player.getCurrentTime())
-        ).subscribe(playerSecond => {
-          console.log('Seconds since video started: ', playerSecond);
-          this.secsSinceStarted = playerSecond;
+        ).subscribe(secsSinceStarted => {
+          const milliSecsSinceStarted = secsSinceStarted * 1000;
+          const videoStart = this.toMilliseconds(this.lesson.audioConfigs[0].videoStart);
+          if (milliSecsSinceStarted >= videoStart) {
+            console.log('Mr Brightside should play now!');
+          }
         });
         break;
       case this.YT.PlayerState.BUFFERING:
@@ -81,5 +83,9 @@ export class LessonComponent implements OnInit, AfterViewInit, OnDestroy {
         }
         break;
     }
+  }
+
+  private toMilliseconds(timestamp: LessonTimestamp): number {
+    return ((timestamp.hours * 60 * 60 + timestamp.minutes * 60 + timestamp.seconds) * 1000);
   }
 }
