@@ -15,14 +15,4 @@ export class ContentCreatorComponent implements OnInit {
       { label: 'My lessons', route: 'lessons' }
     ];
   }
-
-  onTabChange(event: MatTabChangeEvent) {
-    switch (event.index) {
-      case 0:
-
-        break;
-      case 1:
-        break;
-    }
-  }
 }

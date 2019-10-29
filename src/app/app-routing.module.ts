@@ -27,6 +27,7 @@ const routes: Routes = [
   },
   {
     path: 'lesson',
+    canActivate: [SpotifyAuthGuard],
     component: LessonComponent
   },
   {

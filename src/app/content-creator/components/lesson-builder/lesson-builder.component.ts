@@ -33,11 +33,15 @@ export class LessonBuilderComponent implements OnInit, OnDestroy {
       audioConfigs: this.fb.array([], Validators.required)
     });
     this.videoIdSub = this.form.get('videoId').valueChanges.pipe(
-      filter((videoId: string) => videoId.length > 0)
+      filter(
+        (videoId: string) => {
+          this.emptyAudioConfigArray();
+          this.getAudioConfigArray().reset();
+          return videoId.length > 0;
+        }
+      )
     ).subscribe(
       (videoId: string) => {
-        this.emptyAudioConfigArray();
-        this.getAudioConfigArray().reset();
         const url = `https://www.youtube.com/embed/${videoId}`;
         this.videoUrl = this.sanitizer.bypassSecurityTrustResourceUrl(url);
       }

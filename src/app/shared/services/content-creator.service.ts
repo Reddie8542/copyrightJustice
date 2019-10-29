@@ -9,14 +9,21 @@ export class ContentCreatorService {
 
   constructor() {
     this._lessons = [];
+    const createdLesson = JSON.parse(localStorage.getItem('createdLesson'));
+    this._lessons.push(createdLesson);
   }
 
   get lessons(): Lesson[] {
     return this._lessons;
   }
 
+  getLessonByVideoId(videoId: string): Lesson {
+    return this.lessons.find(lesson => lesson.videoId === videoId);
+  }
+
   createLesson(lesson: Lesson) {
+    console.log(lesson);
     this.lessons.push(lesson);
-    console.log(this.lessons);
+    localStorage.setItem('createdLesson', JSON.stringify(lesson));
   }
 }

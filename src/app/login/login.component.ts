@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { SpotifyService } from '../shared/services/spotify.service';
 
 @Component({
@@ -11,6 +11,7 @@ export class LoginComponent implements OnInit {
   isSpotifyAuthenticated: boolean;
 
   constructor(private currentRoute: ActivatedRoute,
+              private router: Router,
               private spotifyServ: SpotifyService) { }
 
   ngOnInit() {
@@ -25,7 +26,7 @@ export class LoginComponent implements OnInit {
   }
 
   onContinueClick() {
-
+    this.router.navigate(['/lesson'], { queryParamsHandling: 'preserve' });
   }
 
   onSpotifySignIn() {

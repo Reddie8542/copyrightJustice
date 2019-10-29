@@ -1,4 +1,14 @@
 <div class="my-lessons-container">
   <h2>My Lessons</h2>
-
+  <mat-card *ngFor="let lesson of lessons">
+    <mat-card-header>
+      <mat-card-title>{{ lesson.videoId }}</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <p>
+        <strong>Shareable URL:</strong>
+        {{ 'http://localhost:4200/lesson?videoId=' + lesson.videoId }}
+      </p>
+    </mat-card-content>
+  </mat-card>
 </div>
