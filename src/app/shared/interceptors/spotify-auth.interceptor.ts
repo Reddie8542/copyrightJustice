@@ -22,7 +22,7 @@ export class SpotifyAuthInterceptor implements HttpInterceptor {
         (event: HttpEvent<any>) => { },
         (error: any) => {
           if (error instanceof HttpErrorResponse && error.status === 401) {
-            this.spotifyServ.deleteAuthToken();
+            this.spotifyServ.clearAuthToken();
             this.router.navigate(['/login', 'viewer']);
           }
         }

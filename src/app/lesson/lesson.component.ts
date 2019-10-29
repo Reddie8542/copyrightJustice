@@ -5,6 +5,7 @@ import { ActivatedRoute } from '@angular/router';
 import { interval, Subscription } from 'rxjs';
 import { switchMap, map } from 'rxjs/operators';
 import { LessonTimestamp } from '../shared/models/audio-config.model';
+import { SpotifyService } from '../shared/services/spotify.service';
 
 @Component({
   selector: 'app-lesson',
@@ -13,19 +14,20 @@ import { LessonTimestamp } from '../shared/models/audio-config.model';
 })
 export class LessonComponent implements OnInit, AfterViewInit, OnDestroy {
   YT: any;
-  player: any;
+  ytPlayer: any;
   lesson: Lesson;
   playerSecondSub: Subscription;
 
   constructor(private ccService: ContentCreatorService,
-              private currentRoute: ActivatedRoute) { }
+              private currentRoute: ActivatedRoute,
+              private spotService: SpotifyService) { }
 
   ngOnInit() {
     const videoId = this.currentRoute.snapshot.queryParams.videoId;
     this.lesson = this.ccService.getLessonByVideoId(videoId);
     (window as any).onYouTubeIframeAPIReady = () => {
       this.YT = (window as any).YT;
-      this.player = new this.YT.Player('ytPlayer', {
+      this.ytPlayer = new this.YT.Player('ytPlayer', {
         height: '100%',
         width: '100%',
         videoId,
@@ -36,11 +38,19 @@ export class LessonComponent implements OnInit, AfterViewInit, OnDestroy {
           origin: 'http://localhost:4200'
         },
         events: {
-          onReady: this.onPlayerReady.bind(this),
-          onStateChange: this.onPlayerStateChange.bind(this)
+          onReady: this.onYouTubePlayerReady.bind(this),
+          onStateChange: this.onYouTubePlayerStateChange.bind(this)
         }
       });
     };
+    this.spotService.playerStateChanges$.subscribe(
+      playerState => {
+        console.log('Spotify Player state: ', playerState)
+      }
+    );
+    this.spotService.playTrack(this.lesson.audioConfigs[0].trackData.trackId).subscribe(
+      response => console.log(response)
+    );
   }
 
   ngOnDestroy() {
@@ -56,17 +66,17 @@ export class LessonComponent implements OnInit, AfterViewInit, OnDestroy {
     doc.body.appendChild(playerApiScript);
   }
 
-  onPlayerReady() {
+  onYouTubePlayerReady() {
     console.log('YouTube player is ready!');
   }
 
-  onPlayerStateChange(event) {
+  onYouTubePlayerStateChange(event) {
     switch (event.data) {
       case this.YT.PlayerState.PLAYING:
         // Start querying video status each second
         const playerSecondChanges$ = interval(200);
         this.playerSecondSub = playerSecondChanges$.pipe(
-          map(value => this.player.getCurrentTime())
+          map(value => this.ytPlayer.getCurrentTime())
         ).subscribe(secsSinceStarted => {
           const milliSecsSinceStarted = secsSinceStarted * 1000;
           const videoStart = this.toMilliseconds(this.lesson.audioConfigs[0].videoStart);
