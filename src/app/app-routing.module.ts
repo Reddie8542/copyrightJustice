@@ -7,6 +7,7 @@ import { ContentCreatorComponent } from './content-creator/content-creator.compo
 import { LessonBuilderComponent } from './content-creator/components/lesson-builder/lesson-builder.component';
 import { SpotifyAuthGuard } from './shared/guards/spotify-auth.guard';
 import { ContentCreatorLoginComponent } from './login/content-creator/content-creator-login.component';
+import { MyLessonsComponent } from './content-creator/components/my-lessons/my-lessons.component';
 
 
 const routes: Routes = [
@@ -36,7 +37,8 @@ const routes: Routes = [
     path: 'content-creator',
     canActivate: [SpotifyAuthGuard],
     children: [
-      { path: 'lesson-builder', component: LessonBuilderComponent }
+      { path: 'lesson-builder', component: LessonBuilderComponent },
+      { path: 'lessons', component: MyLessonsComponent }
     ],
     component: ContentCreatorComponent
   }

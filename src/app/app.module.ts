@@ -26,6 +26,7 @@ import { TrackFormComponent } from './content-creator/components/track-form/trac
 import { ContentCreatorLoginComponent } from './login/content-creator/content-creator-login.component';
 import { CookieService } from 'ngx-cookie-service';
 import { SpotifyAuthInterceptor } from './shared/interceptors/spotify-auth.interceptor';
+import { MyLessonsComponent } from './content-creator/components/my-lessons/my-lessons.component';
 
 @NgModule({
   declarations: [
@@ -38,6 +39,7 @@ import { SpotifyAuthInterceptor } from './shared/interceptors/spotify-auth.inter
     LessonComponent,
     LoginComponent,
     MainNavbarComponent,
+    MyLessonsComponent,
     RegisterComponent,
     TrackFormComponent,
     VideoStartFormComponent

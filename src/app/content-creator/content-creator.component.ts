@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { MatTabChangeEvent } from '@angular/material/tabs';
 
 @Component({
   selector: 'app-content-creator',
@@ -13,5 +14,15 @@ export class ContentCreatorComponent implements OnInit {
       { label: 'Lesson builder', route: 'lesson-builder' },
       { label: 'My lessons', route: 'lessons' }
     ];
+  }
+
+  onTabChange(event: MatTabChangeEvent) {
+    switch (event.index) {
+      case 0:
+
+        break;
+      case 1:
+        break;
+    }
   }
 }

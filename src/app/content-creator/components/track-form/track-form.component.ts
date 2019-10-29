@@ -16,7 +16,7 @@ import { TrackFormStartErrorMatcher } from './track-form-start.error-matcher';
 export class TrackFormComponent implements OnInit, OnDestroy {
   @Input() form: FormGroup;
   tracks: Track[];
-  trackName: Subscription;
+  trackId: Subscription;
   selectedTrackDuration: number;
   endMatcher: TrackFormEndErrorMatcher;
   startMatcher: TrackFormStartErrorMatcher;
@@ -26,15 +26,15 @@ export class TrackFormComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.endMatcher = new TrackFormEndErrorMatcher();
     this.startMatcher = new TrackFormStartErrorMatcher();
-    this.trackName = this.form.get('trackName').valueChanges.pipe(
+    this.trackId = this.form.get('trackId').valueChanges.pipe(
       debounceTime(1000),
-      filter((trackName: string) => trackName != null && trackName !== ''),
-      switchMap((trackName: string) => this.spotifyServ.searchTracks(trackName))
+      filter((trackId: string) => trackId != null && trackId !== ''),
+      switchMap((trackId: string) => this.spotifyServ.searchTracks(trackId))
     ).subscribe((tracks: Track[]) => this.tracks = tracks);
   }
 
   ngOnDestroy() {
-    this.trackName.unsubscribe();
+    this.trackId.unsubscribe();
   }
 
   onSelectTrack(event: MatAutocompleteSelectedEvent) {

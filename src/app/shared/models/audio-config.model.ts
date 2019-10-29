@@ -4,6 +4,7 @@ export interface AudioConfig {
 }
 
 export interface TrackData {
+  trackId: string;
   trackStart: LessonTimestamp;
   trackEnd: LessonTimestamp;
 }

@@ -8,6 +8,7 @@ import { VideoStartFormComponent } from '../video-start-form/video-start-form.co
 import * as moment from 'moment';
 import { Lesson } from 'src/app/shared/models/lesson.model';
 import { ContentCreatorService } from 'src/app/shared/services/content-creator.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-lesson-builder',
@@ -23,6 +24,7 @@ export class LessonBuilderComponent implements OnInit, OnDestroy {
   constructor(private fb: FormBuilder,
               private ccService: ContentCreatorService,
               private sanitizer: DomSanitizer,
+              private router: Router,
               private youtubeServ: YoutubeService) { }
 
   ngOnInit() {
@@ -49,7 +51,7 @@ export class LessonBuilderComponent implements OnInit, OnDestroy {
   pushAudioConfigForm() {
     (this.form.get('audioConfigs') as FormArray).push(this.fb.group({
       trackData: this.fb.group({
-        trackName: [null, Validators.required],
+        trackId: [null, Validators.required],
         trackStart: this.fb.group({
           hours: [null],
           minutes: [null],
@@ -80,12 +82,12 @@ export class LessonBuilderComponent implements OnInit, OnDestroy {
   }
 
   onSubmit() {
-    console.log(this.getAudioConfigArray().value);
     const lesson: Lesson = {
       videoId: this.form.value.videoId,
       audioConfigs: this.getAudioConfigArray().value
     };
     this.ccService.createLesson(lesson);
+    this.router.navigate(['/content-creator', 'lessons']);
   }
 
   requiredDuration(group: FormGroup): ValidationErrors {
