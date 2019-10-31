@@ -5,16 +5,18 @@ import { Lesson } from '../models/lesson.model';
   providedIn: 'root'
 })
 export class ContentCreatorService {
+  // tslint:disable-next-line: variable-name
   private _lessons: Lesson[];
 
   constructor() {
-    this._lessons = [];
-    const createdLesson = JSON.parse(localStorage.getItem('createdLesson'));
-    this._lessons.push(createdLesson);
+    this._lessons = JSON.parse(localStorage.getItem('createdLessons'));
+    if (this._lessons == null) {
+      this._lessons = [];
+    }
   }
 
   get lessons(): Lesson[] {
-    return this._lessons;
+    return this._lessons.slice();
   }
 
   getLessonByVideoId(videoId: string): Lesson {
@@ -23,7 +25,7 @@ export class ContentCreatorService {
 
   createLesson(lesson: Lesson) {
     console.log(lesson);
-    this.lessons.push(lesson);
-    localStorage.setItem('createdLesson', JSON.stringify(lesson));
+    this._lessons.push(lesson);
+    localStorage.setItem('createdLessons', JSON.stringify(this._lessons));
   }
 }

@@ -43,6 +43,18 @@
         ]
       }
     ],
+    "naming-convention": [
+      true,
+      {
+        "type": "member",
+        "format": "camelCase"
+      },
+      {
+        "type": "member",
+        "modifiers": "private",
+        "leadingUnderscore": "require"
+      }
+    ],
     "no-consecutive-blank-lines": false,
     "no-console": [
       true,

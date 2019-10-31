@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
-import { CookieService } from 'ngx-cookie-service';
+import { HttpClient } from '@angular/common/http';
 import { map } from 'rxjs/operators';
 import { Track } from '../models/track.model';
 import { Artist } from '../models/artist.model';
@@ -13,25 +12,23 @@ export class SpotifyService {
   public static readonly WEB_API_BASE_URL = 'https://api.spotify.com/v1/';
   private static readonly AUTH_BASE_URL = 'https://accounts.spotify.com/';
   private static readonly CJ_CLIENT_ID = '34ada31f63b84648acbc8be0904bcb03';
-  // tslint:disable-next-line: variable-name
   private _token: string;
-  // tslint:disable-next-line: variable-name
   private _player: any;
   private _deviceId: string;
+  private _isWebPlaybackSDKReady: boolean;
   playerStateChanges$: Subject<any> = new Subject<any>();
 
-  constructor(private cookieService: CookieService,
-              private http: HttpClient) { }
+  constructor(private http: HttpClient) { }
 
   get authToken(): string {
-    const serviceToken = this._token;
+    const serviceToken = this.token;
     if (this.isTokenValid(serviceToken)) {
       return serviceToken;
     }
-    const cookieToken = this.cookieService.get('spotifyToken');
-    if (this.isTokenValid(cookieToken)) {
-      this._token = cookieToken;
-      return cookieToken;
+    const storageToken = localStorage.getItem('spotifyToken');
+    if (this.isTokenValid(storageToken)) {
+      this.token = storageToken;
+      return storageToken;
     }
     return null;
   }
@@ -40,8 +37,28 @@ export class SpotifyService {
     return this._deviceId;
   }
 
+  get isWebPlaybackSDKReady(): boolean {
+    return this._isWebPlaybackSDKReady;
+  }
+
+  set isWebPlaybackSDKReady(isWebPlaybackSDKReady: boolean) {
+    this._isWebPlaybackSDKReady = isWebPlaybackSDKReady;
+  }
+
   get player(): any {
     return this._player;
+  }
+
+  set player(player: any) {
+    this._player = player;
+  }
+
+  get token(): string {
+    return this._token;
+  }
+
+  set token(token: string) {
+    this._token = token;
   }
 
   private convertToArtist(artist: any): Artist {
@@ -62,32 +79,29 @@ export class SpotifyService {
   }
 
   clearAuthToken(): void {
-    this.cookieService.delete('spotifyToken');
+    localStorage.removeItem('spotifyToken');
     this._token = null;
+  }
+
+  initializePlayer() {
+    const Spotify = (window as any).Spotify;
+    this.player = new Spotify.Player({
+      name: 'spotPlayer',
+      getOAuthToken: cb => cb(this.authToken)
+    });
+
+    this.player.addListener('initialization_error', this.onSpotifyPlayerInitError.bind(this));
+    this.player.addListener('authentication_error', this.onSpotifyPlayerAuthError.bind(this));
+    this.player.addListener('account_error', this.onSpotifyPlayerAccountError.bind(this));
+    this.player.addListener('playback_error', this.onSpotifyPlayerPlaybackError.bind(this));
+    this.player.addListener('player_state_changed', this.onSpotifyPlayerStateChange.bind(this));
+    this.player.addListener('not_ready', this.onSpotifyPlayerNotReady.bind(this));
+    this.player.addListener('ready', this.onSpotifyPlayerReady.bind(this));
+    this.player.connect();
   }
 
   isAuthenticated(): boolean {
     return this.authToken != null;
-  }
-
-  initializePlayer() {
-    (window as any).onSpotifyWebPlaybackSDKReady = () => {
-      const Spotify = (window as any).Spotify;
-      const player = new Spotify.Player({
-        name: 'spotPlayer',
-        getOAuthToken: cb => cb(this.authToken)
-      });
-      this.setPlayer(player);
-
-      this.player.addListener('initialization_error', this.onSpotifyPlayerInitError.bind(this));
-      this.player.addListener('authentication_error', this.onSpotifyPlayerAuthError.bind(this));
-      this.player.addListener('account_error', this.onSpotifyPlayerAccountError.bind(this));
-      this.player.addListener('playback_error', this.onSpotifyPlayerPlaybackError.bind(this));
-      this.player.addListener('player_state_changed', this.onSpotifyPlayerStateChange.bind(this));
-      this.player.addListener('not_ready', this.onSpotifyPlayerNotReady.bind(this));
-      this.player.addListener('ready', this.onSpotifyPlayerReady.bind(this));
-      this.player.connect();
-    };
   }
 
   private isTokenValid(token: string): boolean {
@@ -146,7 +160,7 @@ export class SpotifyService {
       JSON.stringify({ uris: [spotifyUri] }),
       {
         params: {
-          'device_id': this.deviceId
+          device_id: this.deviceId
         }
       }
     );
@@ -180,19 +194,11 @@ export class SpotifyService {
       accessToken: accessTokenString.replace('access_token=', ''),
       expiresIn: expiresInString.replace('expires_in=', '')
     };
-    this.cookieService.set(
-      'spotifyToken',
-      spotifyCookie.accessToken,
-      Number(spotifyCookie.expiresIn)
-    );
-    this._token = spotifyCookie.accessToken;
+    localStorage.setItem('spotifyToken', spotifyCookie.accessToken);
+    this.token = spotifyCookie.accessToken;
   }
 
   private setDeviceId(deviceId: string) {
     this._deviceId = deviceId;
-  }
-
-  private setPlayer(player: any) {
-    this._player = player;
   }
 }

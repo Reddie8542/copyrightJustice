@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { SpotifyService } from 'src/app/shared/services/spotify.service';
-import { CookieService } from 'ngx-cookie-service';
 
 @Component({
   selector: 'app-content-creator-login',
@@ -11,8 +10,7 @@ import { CookieService } from 'ngx-cookie-service';
 export class ContentCreatorLoginComponent implements OnInit {
   isSpotifyAuthenticated: boolean;
 
-  constructor(private cookieService: CookieService,
-              private currentRoute: ActivatedRoute,
+  constructor(private currentRoute: ActivatedRoute,
               private router: Router,
               private spotifyServ: SpotifyService) { }
 
