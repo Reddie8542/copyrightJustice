@@ -16,6 +16,7 @@ export class SpotifyService {
   private _player: any;
   private _deviceId: string;
   private _isWebPlaybackSDKReady: boolean;
+  private _playbackSDKReady: Subject<boolean> = new Subject<boolean>();
   playerStateChanges$: Subject<any> = new Subject<any>();
 
   constructor(private http: HttpClient) { }
@@ -37,12 +38,21 @@ export class SpotifyService {
     return this._deviceId;
   }
 
+  set deviceId(deviceId: string) {
+    this._deviceId = deviceId;
+  }
+
   get isWebPlaybackSDKReady(): boolean {
     return this._isWebPlaybackSDKReady;
   }
 
   set isWebPlaybackSDKReady(isWebPlaybackSDKReady: boolean) {
     this._isWebPlaybackSDKReady = isWebPlaybackSDKReady;
+    this._playbackSDKReady.next(isWebPlaybackSDKReady);
+  }
+
+  get playbackSDKReady$(): Observable<boolean> {
+    return this._playbackSDKReady.asObservable();
   }
 
   get player(): any {
@@ -83,21 +93,30 @@ export class SpotifyService {
     this._token = null;
   }
 
-  initializePlayer() {
-    const Spotify = (window as any).Spotify;
-    this.player = new Spotify.Player({
-      name: 'spotPlayer',
-      getOAuthToken: cb => cb(this.authToken)
-    });
+  /**
+   * Initializes the Spotify playback player
+   *
+   * @returns A promise that will resolve true if player was initialized correctly.
+   * False otherwise
+   *
+   */
+  initializePlayer(): Promise<boolean> {
+    return new Promise((resolve, reject) => {
+      const Spotify = (window as any).Spotify;
+      this.player = new Spotify.Player({
+        name: 'spotPlayer',
+        getOAuthToken: cb => cb(this.authToken)
+      });
 
-    this.player.addListener('initialization_error', this.onSpotifyPlayerInitError.bind(this));
-    this.player.addListener('authentication_error', this.onSpotifyPlayerAuthError.bind(this));
-    this.player.addListener('account_error', this.onSpotifyPlayerAccountError.bind(this));
-    this.player.addListener('playback_error', this.onSpotifyPlayerPlaybackError.bind(this));
-    this.player.addListener('player_state_changed', this.onSpotifyPlayerStateChange.bind(this));
-    this.player.addListener('not_ready', this.onSpotifyPlayerNotReady.bind(this));
-    this.player.addListener('ready', this.onSpotifyPlayerReady.bind(this));
-    this.player.connect();
+      this.player.addListener('initialization_error', this.onSpotifyPlayerInitError.bind(this, resolve));
+      this.player.addListener('authentication_error', this.onSpotifyPlayerAuthError.bind(this, resolve));
+      this.player.addListener('account_error', this.onSpotifyPlayerAccountError.bind(this, resolve));
+      this.player.addListener('playback_error', this.onSpotifyPlayerPlaybackError.bind(this, resolve));
+      this.player.addListener('player_state_changed', this.onSpotifyPlayerStateChange.bind(this));
+      this.player.addListener('not_ready', this.onSpotifyPlayerNotReady.bind(this, resolve));
+      this.player.addListener('ready', this.onSpotifyPlayerReady.bind(this, resolve));
+      this.player.connect();
+    });
   }
 
   isAuthenticated(): boolean {
@@ -121,30 +140,36 @@ export class SpotifyService {
             + `&redirect_uri=${redirect}`;
   }
 
-  private onSpotifyPlayerAccountError(message) {
+  private onSpotifyPlayerAccountError(resolve, message) {
     console.error('Spot player account error: ', message);
+    resolve(false);
   }
 
-  private onSpotifyPlayerAuthError(message) {
+  private onSpotifyPlayerAuthError(resolve, message) {
     console.error('Spot player auth error: ', message);
+    resolve(false);
     this.clearAuthToken();
   }
 
-  private onSpotifyPlayerInitError(message) {
+  private onSpotifyPlayerInitError(resolve, message) {
     console.error('Spot player init error: ', message);
+    resolve(false);
   }
 
-  private onSpotifyPlayerNotReady(deviceId) {
-    console.log('Spot player Device ID has gone offline: ', deviceId);
+  private onSpotifyPlayerNotReady(resolve, webPlaybackPlayer) {
+    console.log('Spot player Device ID has gone offline: ', webPlaybackPlayer.device_id);
+    resolve(false);
   }
 
-  private onSpotifyPlayerPlaybackError(message) {
+  private onSpotifyPlayerPlaybackError(resolve, message) {
     console.error('Spot player playback error: ', message);
+    resolve(false);
   }
 
-  private onSpotifyPlayerReady(deviceId) {
-    console.log('Spotify player ready. Device ID: ', deviceId);
-    this.setDeviceId(deviceId.device_id);
+  private onSpotifyPlayerReady(resolve, webPlaybackPlayer) {
+    this.deviceId = webPlaybackPlayer.device_id;
+    console.log('Spotify player ready. Device ID: ', this.deviceId);
+    resolve(true);
   }
 
   private onSpotifyPlayerStateChange(playerState) {

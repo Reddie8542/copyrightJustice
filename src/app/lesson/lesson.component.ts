@@ -27,7 +27,6 @@ export class LessonComponent implements OnInit, AfterViewInit, OnDestroy {
 
   ngOnInit() {
     const videoId = this.currentRoute.snapshot.queryParams.videoId;
-    this.spotService.initializePlayer();
     this.youtubeService.initializePlayer(videoId, 'ytPlayer');
     this.lesson = this.ccService.getLessonByVideoId(videoId);
     this.sortLessonTracks();

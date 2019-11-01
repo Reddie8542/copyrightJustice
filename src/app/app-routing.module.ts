@@ -8,6 +8,9 @@ import { LessonBuilderComponent } from './content-creator/components/lesson-buil
 import { SpotifyAuthGuard } from './shared/guards/spotify-auth.guard';
 import { ContentCreatorLoginComponent } from './login/content-creator/content-creator-login.component';
 import { MyLessonsComponent } from './content-creator/components/my-lessons/my-lessons.component';
+import { LessonGuard } from './shared/guards/lesson.guard';
+import { SpotifyPlayerResolver } from './shared/resolvers/spotify-player.resolver';
+import { SpotifyPlaybackSDKGuard } from './shared/guards/spotify-playback-sdk.guard';
 
 
 const routes: Routes = [
@@ -27,8 +30,11 @@ const routes: Routes = [
   },
   {
     path: 'lesson',
-    canActivate: [SpotifyAuthGuard],
-    component: LessonComponent
+    canActivate: [LessonGuard, SpotifyAuthGuard, SpotifyPlaybackSDKGuard],
+    component: LessonComponent,
+    resolve: {
+      playerInitCorrectly: SpotifyPlayerResolver
+    }
   },
   {
     path: 'register',

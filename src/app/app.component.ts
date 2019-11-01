@@ -12,6 +12,9 @@ export class AppComponent implements OnInit {
   constructor(private spotService: SpotifyService) { }
 
   ngOnInit() {
-    (window as any).onSpotifyWebPlaybackSDKReady = () => this.spotService.isWebPlaybackSDKReady = true;
+    (window as any).onSpotifyWebPlaybackSDKReady = () => {
+      console.log('Spotify Player SDK is ready!');
+      this.spotService.isWebPlaybackSDKReady = true;
+    };
   }
 }

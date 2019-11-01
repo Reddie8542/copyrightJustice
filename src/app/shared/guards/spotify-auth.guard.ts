@@ -14,12 +14,8 @@ export class SpotifyAuthGuard implements CanActivate {
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot): Observable<boolean> | boolean | UrlTree {
       const isAuthenticated = this.spotifyServ.isAuthenticated();
-      const isWebPlaybackSDKReady = this.spotifyServ.isWebPlaybackSDKReady;
       if (isAuthenticated) {
-        if (isWebPlaybackSDKReady) {
-          return true;
-        }
-        console.error('Spotify playback SDK was not ready yet');
+        return true;
       }
       this.router.navigate(['/login', 'viewer'], {
         queryParams: route.queryParams
