@@ -13,8 +13,7 @@ export class AppComponent implements OnInit {
 
   ngOnInit() {
     (window as any).onSpotifyWebPlaybackSDKReady = () => {
-      console.log('Spotify Player SDK is ready!');
-      this.spotService.isWebPlaybackSDKReady = true;
+      this.spotService.isPlaybackSDKReady = true;
     };
   }
 }

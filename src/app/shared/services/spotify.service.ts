@@ -15,7 +15,7 @@ export class SpotifyService {
   private _token: string;
   private _player: any;
   private _deviceId: string;
-  private _isWebPlaybackSDKReady: boolean;
+  private _isPlaybackSDKReady: boolean;
   private _playbackSDKReady: Subject<boolean> = new Subject<boolean>();
   playerStateChanges$: Subject<any> = new Subject<any>();
 
@@ -42,13 +42,13 @@ export class SpotifyService {
     this._deviceId = deviceId;
   }
 
-  get isWebPlaybackSDKReady(): boolean {
-    return this._isWebPlaybackSDKReady;
+  get isPlaybackSDKReady(): boolean {
+    return this._isPlaybackSDKReady;
   }
 
-  set isWebPlaybackSDKReady(isWebPlaybackSDKReady: boolean) {
-    this._isWebPlaybackSDKReady = isWebPlaybackSDKReady;
-    this._playbackSDKReady.next(isWebPlaybackSDKReady);
+  set isPlaybackSDKReady(isPlaybackSDKReady: boolean) {
+    this._isPlaybackSDKReady = isPlaybackSDKReady;
+    this._playbackSDKReady.next(isPlaybackSDKReady);
   }
 
   get playbackSDKReady$(): Observable<boolean> {

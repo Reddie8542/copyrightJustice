@@ -13,8 +13,8 @@ export class SpotifyPlaybackSDKGuard implements CanActivate {
   canActivate(
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot): Observable<boolean> | boolean {
-      const isSDKReady = this.spotService.isWebPlaybackSDKReady;
-      if (!isSDKReady || isSDKReady == null) {
+      const isSDKReady = this.spotService.isPlaybackSDKReady;
+      if (isSDKReady == null) {
         return this.spotService.playbackSDKReady$;
       } else {
         return isSDKReady;
