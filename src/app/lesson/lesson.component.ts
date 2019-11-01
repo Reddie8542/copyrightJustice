@@ -112,7 +112,7 @@ export class LessonComponent implements OnInit, AfterViewInit, OnDestroy {
         );
 
         concat(startPlayingSource$, stopPlayingSource$).subscribe(
-          data => console.log('started start stop track logic!', data)
+          () => console.log('started start stop track logic!')
         );
         break;
       case this.youtubeService.YouTube.PlayerState.BUFFERING:
