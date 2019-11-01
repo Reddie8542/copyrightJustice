@@ -26,9 +26,9 @@ export class ContentCreatorLoginComponent implements OnInit {
   }
 
   onSpotifySignIn(): void {
-    const redirectUrl = 'http://localhost:4200/login/content-creator';
-    const spotUrl = this.spotifyServ.getImplicitSignInUrl(redirectUrl);
-    location.href = spotUrl;
+    const url = 'http://localhost:4200/login/content-creator';
+    const callbackUrl = this.spotifyServ.getImplicitSignInUrl(url);
+    location.href = callbackUrl;
   }
 
   onYoutubeSignIn(): void {

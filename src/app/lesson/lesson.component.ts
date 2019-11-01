@@ -2,7 +2,7 @@ import { Component, OnInit, AfterViewInit, OnDestroy } from '@angular/core';
 import { ContentCreatorService } from '../shared/services/content-creator.service';
 import { Lesson } from '../shared/models/lesson.model';
 import { ActivatedRoute } from '@angular/router';
-import { interval, Subscription } from 'rxjs';
+import { interval, Subscription, timer, concat } from 'rxjs';
 import {  map, filter, switchMap, take, tap } from 'rxjs/operators';
 import { LessonTimestamp } from '../shared/models/audio-config.model';
 import { SpotifyService } from '../shared/services/spotify.service';
@@ -80,8 +80,8 @@ export class LessonComponent implements OnInit, AfterViewInit, OnDestroy {
   onYouTubePlayerStateChange(event) {
     switch (event.data) {
       case this.youtubeService.YouTube.PlayerState.PLAYING:
-        // Start querying video status each 200ms
-        const playerSecondChanges$ = interval(200).pipe(
+        // Start querying video status each 200ms)
+        const playerSecondChanges$ = timer(0, 200).pipe(
           map(value => this.youtubeService.player.getCurrentTime() * 1000)
         );
 
@@ -96,16 +96,18 @@ export class LessonComponent implements OnInit, AfterViewInit, OnDestroy {
           })
         );
 
-        data$.pipe(
+        const startPlayingSource = data$.pipe(
           filter(data => this.isSpotifyPlayerPaused),
           filter(data => data.msSinceStarted >= data.trackStartAt),
-          // add filter() that only allows new values WHEN spotify player state is NOT "PLAYING"
           switchMap(data => this.spotService.playTrack(data.audioConfig.trackData.trackId)),
           take(1)
-        ).subscribe(response => {
-          console.log('Started playing track!', response);
-          this.isSpotifyPlayerPaused = false;
-        });
+        );
+
+        const stopPlayingSource = data$.pipe(
+
+        );
+
+        const startStopPlayingLogic = concat(startPlayingSource, stopPlayingSource);
         break;
       case this.youtubeService.YouTube.PlayerState.BUFFERING:
       case this.youtubeService.YouTube.PlayerState.ENDED:

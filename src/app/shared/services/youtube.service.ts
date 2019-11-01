@@ -2,7 +2,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { map } from 'rxjs/operators';
-import { Subject } from 'rxjs';
+import { Subject, Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -15,7 +15,7 @@ export class YoutubeService {
   private _player: any;
   // tslint:disable-next-line: variable-name
   private _YouTube: any;
-  playerStateChanges$: Subject<any> = new Subject<any>();
+  private _playerStateChanges: Subject<any> = new Subject<any>();
 
   constructor(private http: HttpClient) { }
 
@@ -25,6 +25,10 @@ export class YoutubeService {
 
   set player(player: any) {
     this._player = player;
+  }
+
+  get playerStateChanges$(): Observable<any> {
+    return this._playerStateChanges.asObservable();
   }
 
   get YouTube(): any {
@@ -60,7 +64,7 @@ export class YoutubeService {
         },
         events: {
           onReady: this.onYouTubePlayerReady.bind(this),
-          onStateChange: (state) => this.playerStateChanges$.next(state)
+          onStateChange: (state) => this.playerStateChanges.next(state)
         }
       });
     };

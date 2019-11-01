@@ -30,8 +30,8 @@ export class LoginComponent implements OnInit {
   }
 
   onSpotifySignIn() {
-    const redirectUri = 'http://localhost:4200/login/viewer';
-    const implicitSignInUrl = this.spotifyServ.getImplicitSignInUrl(redirectUri);
-    location.href = implicitSignInUrl;
+    const url = 'http://localhost:4200/login/viewer';
+    const callbackUrl = this.spotifyServ.getImplicitSignInUrl(url);
+    location.href = callbackUrl;
   }
 }
