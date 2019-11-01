@@ -17,7 +17,7 @@ export class LessonComponent implements OnInit, AfterViewInit, OnDestroy {
   lesson: Lesson;
   playerSecondSub: Subscription;
   spotPlayerStateSub: Subscription;
-  isSpotifyPlayerPaused: boolean;
+  isSpotifyPlayerPaused = true;
   ytPlayerStateSub: Subscription;
 
   constructor(private ccService: ContentCreatorService,
@@ -31,7 +31,7 @@ export class LessonComponent implements OnInit, AfterViewInit, OnDestroy {
     this.lesson = this.ccService.getLessonByVideoId(videoId);
     this.sortLessonTracks();
     this.spotPlayerStateSub = this.spotService.playerStateChanges$.subscribe(
-      playerState => this.isSpotifyPlayerPaused = playerState.paused
+      state => this.isSpotifyPlayerPaused = state.paused
     );
     this.ytPlayerStateSub = this.youtubeService.playerStateChanges$.subscribe(
       this.onYouTubePlayerStateChange.bind(this)
@@ -80,6 +80,7 @@ export class LessonComponent implements OnInit, AfterViewInit, OnDestroy {
   onYouTubePlayerStateChange(event) {
     switch (event.data) {
       case this.youtubeService.YouTube.PlayerState.PLAYING:
+        console.log('Entering case?');
         // Start querying video status each 200ms)
         const playerSecondChanges$ = timer(0, 200).pipe(
           map(value => this.youtubeService.player.getCurrentTime() * 1000)
@@ -96,18 +97,23 @@ export class LessonComponent implements OnInit, AfterViewInit, OnDestroy {
           })
         );
 
-        const startPlayingSource = data$.pipe(
+        const startPlayingSource$ = data$.pipe(
           filter(data => this.isSpotifyPlayerPaused),
           filter(data => data.msSinceStarted >= data.trackStartAt),
           switchMap(data => this.spotService.playTrack(data.audioConfig.trackData.trackId)),
+          tap(response => this.isSpotifyPlayerPaused = false),
           take(1)
         );
 
-        const stopPlayingSource = data$.pipe(
-
+        const stopPlayingSource$ = data$.pipe(
+          filter(data => data.msSinceStarted >= data.stopAt),
+          tap(data => this.spotService.pausePlayer()),
+          take(1)
         );
 
-        const startStopPlayingLogic = concat(startPlayingSource, stopPlayingSource);
+        concat(startPlayingSource$, stopPlayingSource$).subscribe(
+          data => console.log('started start stop track logic!', data)
+        );
         break;
       case this.youtubeService.YouTube.PlayerState.BUFFERING:
       case this.youtubeService.YouTube.PlayerState.ENDED:

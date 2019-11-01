@@ -64,7 +64,7 @@ export class YoutubeService {
         },
         events: {
           onReady: this.onYouTubePlayerReady.bind(this),
-          onStateChange: (state) => this.playerStateChanges.next(state)
+          onStateChange: (state) => this._playerStateChanges.next(state)
         }
       });
     };

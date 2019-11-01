@@ -223,7 +223,7 @@ export class SpotifyService {
     this.token = spotifyCookie.accessToken;
   }
 
-  private setDeviceId(deviceId: string) {
-    this._deviceId = deviceId;
+  pausePlayer() {
+    this.player.pause();
   }
 }
