@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { map } from 'rxjs/operators';
 import { Subject, Observable } from 'rxjs';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -11,6 +12,8 @@ export class YoutubeService {
   private readonly BASE_URL = 'https://www.googleapis.com/youtube/v3/';
   private readonly VIDEOS_ENDPOINT = 'videos';
   private readonly API_KEY = 'AIzaSyA540XnkythztJ17iEUTlmLuI6unSpfIxc';
+
+  private readonly _domain: string = environment.domain;
   // tslint:disable-next-line: variable-name
   private _player: any;
   // tslint:disable-next-line: variable-name
@@ -60,7 +63,7 @@ export class YoutubeService {
           autoplay: 0,
           rel: 0,
           controls: 2,
-          origin: 'http://localhost:4200'
+          origin: this._domain
         },
         events: {
           onReady: this.onYouTubePlayerReady.bind(this),

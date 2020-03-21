@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { SpotifyService } from 'src/app/shared/services/spotify.service';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-content-creator-login',
@@ -8,6 +9,7 @@ import { SpotifyService } from 'src/app/shared/services/spotify.service';
   styleUrls: ['content-creator-login.component.scss']
 })
 export class ContentCreatorLoginComponent implements OnInit {
+  domain: string;
   isSpotifyAuthenticated: boolean;
 
   constructor(private currentRoute: ActivatedRoute,
@@ -15,6 +17,7 @@ export class ContentCreatorLoginComponent implements OnInit {
               private spotifyServ: SpotifyService) { }
 
   ngOnInit() {
+    this.domain = environment.domain;
     this.isSpotifyAuthenticated = this.spotifyServ.isAuthenticated();
     if (!this.isSpotifyAuthenticated) {
       const fragment = this.currentRoute.snapshot.fragment;
@@ -26,7 +29,7 @@ export class ContentCreatorLoginComponent implements OnInit {
   }
 
   onSpotifySignIn(): void {
-    const url = 'http://localhost:4200/login/content-creator';
+    const url = `${this.domain}/login/content-creator`;
     const callbackUrl = this.spotifyServ.getImplicitSignInUrl(url);
     location.href = callbackUrl;
   }

@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { SpotifyService } from '../shared/services/spotify.service';
+import { environment } from '../../environments/environment';
 
 @Component({
   selector: 'app-login',
@@ -8,6 +9,7 @@ import { SpotifyService } from '../shared/services/spotify.service';
   styleUrls: ['login.component.scss']
 })
 export class LoginComponent implements OnInit {
+  domain: string;
   isSpotifyAuthenticated: boolean;
 
   constructor(private currentRoute: ActivatedRoute,
@@ -15,6 +17,7 @@ export class LoginComponent implements OnInit {
               private spotifyServ: SpotifyService) { }
 
   ngOnInit() {
+    this.domain = environment.domain;
     this.isSpotifyAuthenticated = this.spotifyServ.isAuthenticated();
     if (!this.isSpotifyAuthenticated) {
       const fragment = this.currentRoute.snapshot.fragment;
@@ -30,7 +33,7 @@ export class LoginComponent implements OnInit {
   }
 
   onSpotifySignIn() {
-    const url = 'http://localhost:4200/login/viewer';
+    const url = `${this.domain}/login/viewer`;
     const callbackUrl = this.spotifyServ.getImplicitSignInUrl(url);
     location.href = callbackUrl;
   }
